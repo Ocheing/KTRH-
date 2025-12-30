@@ -1,0 +1,79 @@
+{
+  "kind": "collectionType",
+  "collectionName": "doctors",
+  "info": {
+    "singularName": "doctor",
+    "pluralName": "doctors",
+    "displayName": "Doctor"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "title": {
+      "type": "string"
+    },
+    "department": {
+      "type": "enumeration",
+      "enum": [
+        " cardiology",
+        "neurology",
+        "pediatrics",
+        "orthopedics",
+        "surgery",
+        "emergency"
+      ]
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "bio": {
+      "type": "blocks"
+    },
+    "experience": {
+      "type": "string"
+    },
+    "qualifications": {
+      "type": "json"
+    },
+    "expertise": {
+      "type": "json"
+    },
+    "consultation_hours": {
+      "type": "string"
+    },
+    "achievements": {
+      "type": "blocks"
+    },
+    "availability": {
+      "type": "json"
+    },
+    "contact": {
+      "type": "json"
+    },
+    "stats": {
+      "type": "json"
+    },
+    "is_featured": {
+      "type": "boolean"
+    },
+    "order": {
+      "type": "integer"
+    }
+  }
+}

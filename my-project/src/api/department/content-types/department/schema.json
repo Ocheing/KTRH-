@@ -1,0 +1,82 @@
+{
+  "kind": "collectionType",
+  "collectionName": "departments",
+  "info": {
+    "singularName": "department",
+    "pluralName": "departments",
+    "displayName": "Department"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid"
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "clinical",
+        "surgical",
+        "diagnostic",
+        "support"
+      ]
+    },
+    "icon_class": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "head_of_department": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "location": {
+      "type": "string"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "head_qualification": {
+      "type": "string"
+    },
+    "head_experience": {
+      "type": "string"
+    },
+    "extension": {
+      "type": "string"
+    },
+    "operating_hours": {
+      "type": "string"
+    },
+    "stats": {
+      "type": "json"
+    },
+    "staff": {
+      "type": "json"
+    },
+    "equipment": {
+      "type": "json"
+    },
+    "services": {
+      "type": "json"
+    },
+    "contact": {
+      "type": "json"
+    }
+  }
+}

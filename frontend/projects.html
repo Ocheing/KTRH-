@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Kisii Teaching & Referral Hospital</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/projects.css">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+</head>
+
+<body>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-wrapper">
+                <!-- Logo -->
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="img/logo-2.png" alt="KTRH Logo" class="logo-img">
+                        <span class="logo-text">
+                            <strong></strong>
+                            <small></small>
+                        </span>
+                    </a>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="navbar" id="navbar">
+                    <!-- Mobile Toggle -->
+                    <button class="nav-toggle" id="navToggle">
+                        <span class="toggle-line"></span>
+                        <span class="toggle-line"></span>
+                        <span class="toggle-line"></span>
+                    </button>
+
+                    <!-- Main Navigation -->
+                    <ul class="nav-menu">
+                        <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="about.html" class="nav-link"><i class="fas fa-info-circle"></i> About Us</a></li>
+                        <li class="nav-dropdown">
+                            <a href="#" class="nav-link dropdown-toggle"><i class="fas fa-stethoscope"></i> Services&Careers <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="careers.html">Careers</a></li>
+                                <li><a href="services.html#cardiology">Cardiology</a></li>
+                                <li><a href="services.html#neurology">Neurology</a></li>
+                                <li><a href="services.html#pediatrics">Pediatrics</a></li>
+                                <li><a href="services.html#emergency">Emergency Care</a></li>
+                                <li><a href="services.html">View All</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="departments.html" class="nav-link"><i class="fas fa-hospital"></i> Departments</a></li>
+                        <li class="nav-dropdown">
+                            <a href="#" class="nav-link dropdown-toggle active"><i class="fas fa-camera"></i> Media&Projects <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="gallery.html">Media&Gallery</a></li>
+                                <li><a href="projects.html">Projects</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="contact.html" class="nav-link"><i class="fas fa-phone"></i> Contact Us</a></li>
+                        <li><a href="appointment.html" class="nav-link appointment"><i class="fas fa-calendar-check"></i> Appointment</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header" style="background: linear-gradient(rgba(44, 73, 100, 0.85), rgba(44, 73, 100, 0.85)), url('https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') center/cover no-repeat;">
+        <div class="container">
+            <h1>Our Projects</h1>
+            <p>Building the future of healthcare through innovative projects and infrastructure development</p>
+        </div>
+    </section>
+
+    <!-- Projects Navigation -->
+    <section class="projects-navigation">
+        <div class="container">
+            <div class="projects-nav-wrapper">
+                <div class="projects-categories">
+                    <button class="category-btn active" data-category="all">
+                        <i class="fas fa-th-large"></i> All Projects
+                    </button>
+                    <button class="category-btn" data-category="ongoing">
+                        <i class="fas fa-spinner"></i> Ongoing
+                    </button>
+                    <button class="category-btn" data-category="completed">
+                        <i class="fas fa-check-circle"></i> Completed
+                    </button>
+                    <button class="category-btn" data-category="upcoming">
+                        <i class="fas fa-calendar-alt"></i> Upcoming
+                    </button>
+                    <button class="category-btn" data-category="research">
+                        <i class="fas fa-flask"></i> Research
+                    </button>
+                    <button class="category-btn" data-category="infrastructure">
+                        <i class="fas fa-hard-hat"></i> Infrastructure
+                    </button>
+                </div>
+                
+                <div class="projects-search">
+                    <input type="text" id="projectsSearch" placeholder="Search projects...">
+                    <button type="button"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Stats -->
+    <section class="projects-stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-hard-hat"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>15+</h3>
+                        <p>Active Projects</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>42</h3>
+                        <p>Completed Projects</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>500M+</h3>
+                        <p>Investment Value</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>12</h3>
+                        <p>Partner Organizations</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Grid -->
+    <section class="projects-grid-section">
+        <div class="container">
+            <div class="projects-grid" id="projectsGrid">
+                <!-- Ongoing Project 1 -->
+                <div class="project-card ongoing infrastructure" data-title="New Cardiac Center">
+                    <div class="project-badge ongoing">Ongoing</div>
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1516549655669-df6654e435de?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="New Cardiac Center" loading="lazy">
+                        <div class="project-overlay">
+                            <div class="overlay-content">
+                                <span class="project-category">Infrastructure</span>
+                                <h3>New Cardiac Center</h3>
+                                <p>State-of-the-art cardiac care facility with 50 beds</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-header">
+                            <h2>Cardiac Center Expansion</h2>
+                            <span class="project-status ongoing">75% Complete</span>
+                        </div>
+                        
+                        <p class="project-description">
+                            Construction of a new 5-story cardiac center equipped with modern cath labs, 
+                            cardiac ICU, and rehabilitation facilities. The center will serve as a regional 
+                            hub for cardiac care.
+                        </p>
+                        
+                        <div class="project-details">
+                            <div class="detail">
+                                <i class="fas fa-calendar-alt"></i>
+                                <div>
+                                    <strong>Timeline</strong>
+                                    <span>Jan 2024 - Dec 2024</span>
+                                </div>
+                            </div>
+                            <div class="detail">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <div>
+                                    <strong>Budget</strong>
+                                    <span>KES 850M</span>
+                                </div>
+                            </div>
+                            <div class="detail">
+                                <i class="fas fa-user-hard-hat"></i>
+                                <div>
+                                    <strong>Contractor</strong>
+                                    <span>BuildRight Constructions</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%;"></div>
+                            <span class="progress-text">75% Complete</span>
+                        </div>
+                        
+                        <div class="project-actions">
+                            <button class="action-btn details-btn" data-id="1">
+                                <i class="fas fa-info-circle"></i> Project Details
+                            </button>
+                            <button class="action-btn updates-btn" data-id="1">
+                                <i class="fas fa-newspaper"></i> Latest Updates
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completed Project 1 -->
+                <div class="project-card completed infrastructure" data-title="MRI & CT Scan Center">
+                    <div class="project-badge completed">Completed</div>
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="MRI & CT Scan Center" loading="lazy">
+                        <div class="project-overlay">
+                            <div class="overlay-content">
+                                <span class="project-category">Infrastructure</span>
+                                <h3>MRI & CT Scan Center</h3>
+                                <p>Advanced diagnostic imaging facility</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-header">
+                            <h2>Diagnostic Imaging Center</h2>
+                            <span class="project-status completed">Completed</span>
+                        </div>
+                        
+                        <p class="project-description">
+                            Establishment of a modern diagnostic center featuring 3T MRI, 128-slice CT scan, 
+                            and digital X-ray systems. The center serves over 100 patients daily.
+                        </p>
+                        
+                        <div class="project-details">
+                            <div class="detail">
+                                <i class="fas fa-calendar-alt"></i>
+                                <div>
+                                    <strong>Completed</strong>
+                                    <span>December 2023</span>
+                                </div>
+                            </div>
+                            <div class="detail">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <div>
+                                    <strong>Investment</strong>
+                                    <span>KES 450M</span>
+                                </div>
+                            </div>
+                            <div class="detail">
+                                <i class="fas fa-handshake"></i>
+                                <div>
+                                    <strong>Partner</strong>
+                                    <span>GE Healthcare</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="project-impact">
+                            <h4><i class="fas fa-chart-line"></i> Impact:</h4>
+                            <ul>
+                                <li>Reduced waiting time for scans by 70%</li>
+                                <li>Serving 100+ patients daily</li>
+                                <li>Regional referral center</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="project-actions">
+                            <button class="action-btn details-btn" data-id="2">
+                                <i class="fas fa-info-circle"></i> Project Details
+                            </button>
+                            <button class="action-btn gallery-btn" data-id="2">
+                                <i class="fas fa-images"></i> View Gallery
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Research Project 1 -->
+                <div class="project-card ongoing research" data-title="Cancer Research Program">
+                    <div class="project-badge ongoing">Ongoing</div>
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="Cancer Research Program" loading="lazy">
+                        <div class="project-overlay">
+                            <div class="overlay-content">
+                                <span class="project-category">Research</span>
+                                <h3>Cancer Research</h3>
+                                <p>Regional cancer treatment and research program</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-header">
+                            <h2>Cancer Research & Treatment Center</h2>
+                            <span class="project-status ongoing">60% Complete</span>
+                        </div>
+                        
+                        <p class="project-description">
+                            Multi-disciplinary cancer research program focusing on breast, cervical, 
+                            and prostate cancers prevalent in the region. Includes clinical trials and 
+                            community screening programs.
+                        </p>
+                        
+                        <div class="project-details">
+                            <div class="detail">
+                                <i class="fas fa-calendar-alt"></i>
+                                <div>
+                                    <strong>Timeline</strong>
+                                    <span>2023 - 2025</span>
+                                </div>
+                            </div>
+                            <div class="detail">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <div>
+                                    <strong>Funding</strong>
+                                    <span>KES 320M</span>
+                                </div>
+                            </div>
+                            <div class="detail">
+                                <i class="fas fa-university"></i>
+                                <div>
+                                    <strong>Partners</strong>
+                                    <span>WHO, Kisii University</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 60%;"></div>
+                            <span class="progress-text">60% Complete</span>
+                        </div>
+                        
+                        <div class="project-milestones">
+                            <h4><i class="fas fa-flag-checkered"></i> Recent Milestones:</h4>
+                            <ul>
+                                <li>500+ patients screened</li>
+                                <li>Research lab established</li>
+                                <li>Clinical trials initiated</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="project-actions">
+                            <button class="action-btn details-btn" data-id="3">
+                                <i class="fas fa-info-circle"></i> Project Details
+                            </button>
+                            <button class="action-btn research-btn" data-id="3">
+                                <i class="fas fa-file-alt"></i> Research Papers
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Project 1 -->
+                <div class="project-card upcoming infrastructure" data-title="Children's Hospital Wing">
+                    <div class="project-badge upcoming">Upcoming</div>
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="Children's Hospital Wing" loading="lazy">
+                        <div class="project-overlay">
+                            <div class="overlay-content">
+                                <span class="project-category">Infrastructure</span>
+                                <h3>Children's Wing</h3>
+                                <p>Dedicated pediatric care facility</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-header">
+                            <h2>Children's Hospital Wing</h2>
+                            <span class="project-status upcoming">Planning Phase</span>
+                        </div>
+                        
+                        <p class="project-description">
+                            Construction of a dedicated children's hospital wing with 100 beds, 
+                            pediatric ICU, play therapy areas, and family accommodation facilities.
+                        </p>
+                        
+                        <div class="project-details">
+                            <div class="detail">
+                                <i class="fas fa-calendar-alt"></i>
+                                <div>
+                                    <strong>Start Date</strong>
+                                    <span>Q3 2024</span>
+                                </div>
+                            </div>
+                            <div class="detail">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <div>
+                                    <strong>Estimated Budget</strong>
+                                    <span>KES 1.2B</span>
+                                </div>
+                            </div>
+                            <div class="detail">
+                                <i class="fas fa-handshake"></i>
+                                <div>
+                                    <strong>Funding Partner</strong>
+                                    <span>Ministry of Health</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="project-features">
+                            <h4><i class="fas fa-star"></i> Key Features:</h4>
+                            <ul>
+                                <li>100-bed capacity</li>
+                                <li>Pediatric ICU & NICU</li>
+                                <li>Child-friendly environment</li>
+                                <li>Family accommodation</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="project-actions">
+                            <button class="action-btn details-btn" data-id="4">
+                                <i class="fas fa-info-circle"></i> Project Details
+                            </button>
+                            <button class="action-btn support-btn" data-id="4">
+                                <i class="fas fa-hand-holding-heart"></i> Support Project
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completed Project 2 -->
+                <div class="project-card completed infrastructure" data-title="Solar Power Project">
+                    <div class="project-badge completed">Completed</div>
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1466611653911-95081537e5b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="Solar Power Project" loading="lazy">
+                        <div class="project-overlay">
+                            <div class="overlay-content">
+                                <span class="project-category">Infrastructure</span>
+                                <h3>Solar Power</h3>
+                                <p>Green energy initiative</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-header">
+                            <h2>Solar Power Installation</h2>
+                            <span class="project-status completed">Completed</span>
+                        </div>
+                        
+                        <p class="project-description">
+                            Installation of 500kW solar power system to provide clean energy and 
+                            reduce electricity costs by 40%. The project includes battery storage 
+                            for backup power.
+                        </p>
+                        
+                        <div class="project-details">
+                            <div class="detail">
+                                <i class="fas fa-calendar-alt"></i>
+                                <div>
+                                    <strong>Completed</strong>
+                                    <span>October 2023</span>
+                                </div>
+                            </div>
+                            <div class="detail">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <div>
+                                    <strong>Investment</strong>
+                                    <span>KES 180M</span>
+                                </div>
+                            </div>
+                            <div class="detail">
+                                <i class="fas fa-leaf"></i>
+                                <div>
+                                    <strong>CO2 Reduction</strong>
+                                    <span>500 tons/year</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="project-impact">
+                            <h4><i class="fas fa-chart-line"></i> Achievements:</h4>
+                            <ul>
+                                <li>40% reduction in electricity costs</li>
+                                <li>500kW solar capacity</li>
+                                <li>24-hour battery backup</li>
+                                <li>Green hospital certification</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="project-actions">
+                            <button class="action-btn details-btn" data-id="5">
+                                <i class="fas fa-info-circle"></i> Project Details
+                            </button>
+                            <button class="action-btn case-study-btn" data-id="5">
+                                <i class="fas fa-chart-bar"></i> Case Study
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ongoing Project 2 -->
+                <div class="project-card ongoing research" data-title="Telemedicine Network">
+                    <div class="project-badge ongoing">Ongoing</div>
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1586773860418-dc22f8b874bc?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="Telemedicine Network" loading="lazy">
+                        <div class="project-overlay">
+                            <div class="overlay-content">
+                                <span class="project-category">Research</span>
+                                <h3>Telemedicine</h3>
+                                <p>Digital healthcare network</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-header">
+                            <h2>Regional Telemedicine Network</h2>
+                            <span class="project-status ongoing">80% Complete</span>
+                        </div>
+                        
+                        <p class="project-description">
+                            Development of a telemedicine network connecting 20 rural health centers 
+                            to KTRH specialists. Includes video consultations, remote monitoring, 
+                            and e-prescription systems.
+                        </p>
+                        
+                        <div class="project-details">
+                            <div class="detail">
+                                <i class="fas fa-calendar-alt"></i>
+                                <div>
+                                    <strong>Timeline</strong>
+                                    <span>2023 - 2024</span>
+                                </div>
+                            </div>
+                            <div class="detail">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <div>
+                                    <strong>Budget</strong>
+                                    <span>KES 250M</span>
+                                </div>
+                            </div>
+                            <div class="detail">
+                                <i class="fas fa-satellite-dish"></i>
+                                <div>
+                                    <strong>Technology Partner</strong>
+                                    <span>Safaricom PLC</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 80%;"></div>
+                            <span class="progress-text">80% Complete</span>
+                        </div>
+                        
+                        <div class="project-milestones">
+                            <h4><i class="fas fa-flag-checkered"></i> Progress:</h4>
+                            <ul>
+                                <li>15 centers connected</li>
+                                <li>5000+ consultations</li>
+                                <li>Training completed</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="project-actions">
+                            <button class="action-btn details-btn" data-id="6">
+                                <i class="fas fa-info-circle"></i> Project Details
+                            </button>
+                            <button class="action-btn demo-btn" data-id="6">
+                                <i class="fas fa-laptop-medical"></i> Live Demo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Load More Button -->
+            <div class="load-more-container">
+                <button class="load-more-btn" id="loadMore">
+                    <i class="fas fa-plus"></i> Load More Projects
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners Section -->
+ <section class="accreditation-partners">
+    <div class="container">
+        <div class="section-header">
+            <h2>Accreditations & Partners</h2>
+            <p>Recognized by leading healthcare organizations</p>
+        </div>
+        
+        <div class="auto-carousel-container">
+            <div class="auto-carousel-track">
+                
+                <div class="partner-logo">
+                    <div class="logo-circle">
+                        <img src="img/kmtc.png" alt="KMTC Partner" loading="lazy">
+                    </div>
+                    <p>Kenya Medical Training College</p>
+                </div>
+                
+                <div class="partner-logo">
+                    <div class="logo-circle">
+                        <img src="img/kisii-university.jfif" alt="Kisii University" loading="lazy">
+                    </div>
+                    <p>Kisii University</p>
+                </div>
+                
+                <div class="partner-logo">
+                    <div class="logo-circle">
+                        <img src="img/WHO.jfif" alt="WHO" loading="lazy">
+                    </div>
+                    <p>World Health Organization</p>
+                </div>
+                
+                <div class="partner-logo">
+                    <div class="logo-circle">
+                        <img src="img/nhif.png" alt="NHIF" loading="lazy">
+                    </div>
+                    <p>National Hospital Insurance Fund</p>
+                </div>
+
+                 <div class="partner-logo">
+                    <div class="logo-circle">
+                        <img src="img/ministry-of-health.png" alt="Ministry of Health" loading="lazy">
+                    </div>
+                    <p>Ministry of Health</p>
+                </div>
+                
+                <div class="partner-logo">
+                    <div class="logo-circle">
+                        <img src="img/kmpb.jfif" alt="KMPB" loading="lazy">
+                    </div>
+                    <p>Kenya Medical Practitioners Board</p>
+                </div>
+            </div>
+            
+            <!-- Gradient overlays for smooth edges -->
+            <div class="carousel-overlay left-overlay"></div>
+            <div class="carousel-overlay right-overlay"></div>
+        </div>
+    </div>
+</section>
+                   
+
+    <!-- Funding Opportunities -->
+    <section class="funding-opportunities">
+        <div class="container">
+            <div class="funding-content">
+                <div class="funding-info">
+                    <h2><i class="fas fa-hand-holding-usd"></i> Support Our Projects</h2>
+                    <p>Join us in building better healthcare infrastructure. Your support can help us complete critical projects faster.</p>
+                    
+                    <div class="funding-options">
+                        <div class="funding-option">
+                            <i class="fas fa-building"></i>
+                            <h3>Corporate Partnerships</h3>
+                            <p>Strategic partnerships for large-scale projects</p>
+                        </div>
+                        <div class="funding-option">
+                            <i class="fas fa-users"></i>
+                            <h3>Community Fundraising</h3>
+                            <p>Community-driven initiatives and donations</p>
+                        </div>
+                        <div class="funding-option">
+                            <i class="fas fa-globe-africa"></i>
+                            <h3>International Grants</h3>
+                            <p>Global health funding opportunities</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-funding">
+                    <h3><i class="fas fa-envelope"></i> Contact Project Office</h3>
+                    <p>Interested in partnering or funding our projects?</p>
+                    <a href="contact.html" class="contact-btn">
+                        <i class="fas fa-paper-plane"></i> Get in Touch
+                    </a>
+                    <div class="contact-details">
+                        <p><i class="fas fa-phone"></i> <strong>Project Office:</strong> +254 758 721 997 (Ext: 3101)</p>
+                        <p><i class="fas fa-envelope"></i> <strong>Email:</strong> projects@ktrh.or.ke</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Modal -->
+    <div class="project-modal" id="projectModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <div class="modal-body" id="modalBody">
+                <!-- Content loaded by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <img src="img/logo-2.png" alt="KTRH Logo">
+                        <div>
+                            <h3>KTRH</h3>
+                            <p>Kisii Teaching & Referral Hospital</p>
+                        </div>
+                    </div>
+                    <p class="footer-description">Providing quality healthcare services with compassion and excellence since 2005.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="about.html"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                        <li><a href="services.html"><i class="fas fa-chevron-right"></i> Services</a></li>
+                        <li><a href="departments.html"><i class="fas fa-chevron-right"></i> Departments</a></li>
+                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Our Services</h4>
+                    <ul class="footer-links">
+                        <li><a href="services.html#cardiology"><i class="fas fa-chevron-right"></i> Cardiology</a></li>
+                        <li><a href="services.html#neurology"><i class="fas fa-chevron-right"></i> Neurology</a></li>
+                        <li><a href="services.html#pediatrics"><i class="fas fa-chevron-right"></i> Pediatrics</a></li>
+                        <li><a href="services.html#emergency"><i class="fas fa-chevron-right"></i> Emergency Care</a></li>
+                        <li><a href="services.html"><i class="fas fa-chevron-right"></i> View All</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Contact Info</h4>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-map-marker-alt"></i> Kisii Town, 40200, Kenya</li>
+                        <li><i class="fas fa-phone"></i> +254 758 721 997</li>
+                        <li><i class="fas fa-envelope"></i> info@ktrh.or.ke</li>
+                        <li><i class="fas fa-clock"></i> 24/7 Emergency Services</li>
+                    </ul>
+                    <div class="newsletter">
+                        <h5>Subscribe to Newsletter</h5>
+                        <form class="newsletter-form">
+                            <input type="email" placeholder="Your Email" required>
+                            <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; <span id="currentYear"></span> Kisii Teaching & Referral Hospital. All rights reserved.</p>
+                <p>Designed by ICT Team KTRH</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-header">
+            <i class="fas fa-comments"></i>
+            <span>Need Help?</span>
+            <button class="chat-close" id="chatClose"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="chat-body">
+            <p>Hello! How can we assist you today?</p>
+            <div class="chat-options">
+                <button class="chat-option" data-action="appointment">
+                    <i class="fas fa-calendar-check"></i> Book Appointment
+                </button>
+                <button class="chat-option" data-action="directions">
+                    <i class="fas fa-map-marker-alt"></i> Get Directions
+                </button>
+                <button class="chat-option" data-action="emergency">
+                    <i class="fas fa-ambulance"></i> Emergency Help
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Top -->
+    <a href="#" class="back-to-top" id="backToTop">
+        <i class="fas fa-chevron-up"></i>
+    </a>
+
+    <script src="js/script.js"></script>
+    <script src="js/projects.js"></script>
+</body>
+</html>

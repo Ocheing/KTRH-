@@ -1,0 +1,83 @@
+{
+  "kind": "collectionType",
+  "collectionName": "services",
+  "info": {
+    "singularName": "service",
+    "pluralName": "services",
+    "displayName": "Service"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "specialized",
+        "diagnostic",
+        "surgical",
+        "support"
+      ]
+    },
+    "icon_class": {
+      "type": "string"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "short_description": {
+      "type": "string"
+    },
+    "operating_hours": {
+      "type": "string"
+    },
+    "emergency_available": {
+      "type": "boolean"
+    },
+    "is_emergency_service": {
+      "type": "boolean"
+    },
+    "features": {
+      "type": "json"
+    },
+    "equipment": {
+      "type": "json"
+    },
+    "procedures": {
+      "type": "json"
+    },
+    "specialists": {
+      "type": "json"
+    },
+    "contact": {
+      "type": "json"
+    },
+    "summary_icon": {
+      "type": "string"
+    },
+    "summary_title": {
+      "type": "string"
+    },
+    "summary_description": {
+      "type": "string"
+    }
+  }
+}
