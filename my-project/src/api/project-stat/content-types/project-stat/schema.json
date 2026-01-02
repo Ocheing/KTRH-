@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "project_stats",
+  "info": {
+    "singularName": "project-stat",
+    "pluralName": "project-stats",
+    "displayName": "project-stat"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "activeProjects": {
+      "type": "integer"
+    },
+    "completedProjects": {
+      "type": "integer"
+    },
+    "investmentValue": {
+      "type": "string"
+    },
+    "partnerOrganizations": {
+      "type": "integer"
+    },
+    "isActive": {
+      "type": "boolean"
+    }
+  }
+}

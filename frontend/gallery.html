@@ -110,7 +110,7 @@
                 
                 <div class="media-search">
                     <input type="text" id="mediaSearch" placeholder="Search media...">
-                    <button type="button"><i class="fas fa-search"></i></button>
+                    <button type="button" id="searchButton"><i class="fas fa-search"></i></button>
                 </div>
             </div>
         </div>
@@ -120,310 +120,10 @@
     <section class="gallery-section">
         <div class="container">
             <div class="gallery-grid" id="galleryGrid">
-                <!-- Event 1 -->
-                <div class="gallery-item events" data-title="Medical Camp 2024">
-                    <div class="gallery-image">
-                        <img src="https://images.unsplash.com/photo-1516549655669-df6654e435de?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="Medical Camp 2024" loading="lazy">
-                        <div class="gallery-overlay">
-                            <div class="overlay-content">
-                                <span class="item-category">Events</span>
-                                <h3>Medical Camp 2024</h3>
-                                <p>Free medical camp serving 500+ community members</p>
-                                <div class="item-date">
-                                    <i class="far fa-calendar"></i> March 15, 2024
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-actions">
-                        <button class="action-btn view-btn" data-id="1">
-                            <i class="fas fa-expand"></i> View
-                        </button>
-                        <button class="action-btn share-btn" data-id="1">
-                            <i class="fas fa-share-alt"></i> Share
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Facility 1 -->
-                <div class="gallery-item facilities" data-title="New ICU Unit">
-                    <div class="gallery-image">
-                        <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="New ICU Unit" loading="lazy">
-                        <div class="gallery-overlay">
-                            <div class="overlay-content">
-                                <span class="item-category">Facilities</span>
-                                <h3>New ICU Unit</h3>
-                                <p>State-of-the-art Intensive Care Unit with 20 beds</p>
-                                <div class="item-date">
-                                    <i class="far fa-calendar"></i> February 28, 2024
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-actions">
-                        <button class="action-btn view-btn" data-id="2">
-                            <i class="fas fa-expand"></i> View
-                        </button>
-                        <button class="action-btn share-btn" data-id="2">
-                            <i class="fas fa-share-alt"></i> Share
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Team Activity 1 -->
-                <div class="gallery-item team" data-title="Staff Training">
-                    <div class="gallery-image">
-                        <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="Staff Training" loading="lazy">
-                        <div class="gallery-overlay">
-                            <div class="overlay-content">
-                                <span class="item-category">Team Activities</span>
-                                <h3>Staff Training</h3>
-                                <p>Advanced cardiac life support training for medical staff</p>
-                                <div class="item-date">
-                                    <i class="far fa-calendar"></i> January 20, 2024
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-actions">
-                        <button class="action-btn view-btn" data-id="3">
-                            <i class="fas fa-expand"></i> View
-                        </button>
-                        <button class="action-btn share-btn" data-id="3">
-                            <i class="fas fa-share-alt"></i> Share
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Achievement 1 -->
-                <div class="gallery-item achievements" data-title="Quality Award 2023">
-                    <div class="gallery-image">
-                        <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="Quality Award 2023" loading="lazy">
-                        <div class="gallery-overlay">
-                            <div class="overlay-content">
-                                <span class="item-category">Achievements</span>
-                                <h3>Quality Award 2023</h3>
-                                <p>Best Teaching Hospital Award received from Ministry of Health</p>
-                                <div class="item-date">
-                                    <i class="far fa-calendar"></i> December 15, 2023
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-actions">
-                        <button class="action-btn view-btn" data-id="4">
-                            <i class="fas fa-expand"></i> View
-                        </button>
-                        <button class="action-btn share-btn" data-id="4">
-                            <i class="fas fa-share-alt"></i> Share
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Community 1 -->
-                <div class="gallery-item community" data-title="Health Awareness Campaign">
-                    <div class="gallery-image">
-                        <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="Health Awareness Campaign" loading="lazy">
-                        <div class="gallery-overlay">
-                            <div class="overlay-content">
-                                <span class="item-category">Community</span>
-                                <h3>Health Awareness</h3>
-                                <p>Diabetes awareness campaign in local community</p>
-                                <div class="item-date">
-                                    <i class="far fa-calendar"></i> November 10, 2023
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-actions">
-                        <button class="action-btn view-btn" data-id="5">
-                            <i class="fas fa-expand"></i> View
-                        </button>
-                        <button class="action-btn share-btn" data-id="5">
-                            <i class="fas fa-share-alt"></i> Share
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Video 1 -->
-                <div class="gallery-item videos" data-title="Hospital Tour Video">
-                    <div class="gallery-image video-item">
-                        <img src="https://images.unsplash.com/photo-1586773860418-dc22f8b874bc?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="Hospital Tour" loading="lazy">
-                        <div class="video-play">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="gallery-overlay">
-                            <div class="overlay-content">
-                                <span class="item-category">Videos</span>
-                                <h3>Hospital Tour</h3>
-                                <p>Virtual tour of our modern facilities</p>
-                                <div class="item-date">
-                                    <i class="far fa-calendar"></i> October 5, 2023
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-actions">
-                        <button class="action-btn view-btn" data-id="6">
-                            <i class="fas fa-play"></i> Play
-                        </button>
-                        <button class="action-btn share-btn" data-id="6">
-                            <i class="fas fa-share-alt"></i> Share
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Event 2 -->
-                <div class="gallery-item events" data-title="Blood Donation Drive">
-                    <div class="gallery-image">
-                        <img src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="Blood Donation Drive" loading="lazy">
-                        <div class="gallery-overlay">
-                            <div class="overlay-content">
-                                <span class="item-category">Events</span>
-                                <h3>Blood Donation Drive</h3>
-                                <p>Annual blood donation campaign with 300+ donors</p>
-                                <div class="item-date">
-                                    <i class="far fa-calendar"></i> September 20, 2023
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-actions">
-                        <button class="action-btn view-btn" data-id="7">
-                            <i class="fas fa-expand"></i> View
-                        </button>
-                        <button class="action-btn share-btn" data-id="7">
-                            <i class="fas fa-share-alt"></i> Share
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Facility 2 -->
-                <div class="gallery-item facilities" data-title="Modern Operation Theater">
-                    <div class="gallery-image">
-                        <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="Modern Operation Theater" loading="lazy">
-                        <div class="gallery-overlay">
-                            <div class="overlay-content">
-                                <span class="item-category">Facilities</span>
-                                <h3>Operation Theater</h3>
-                                <p>Advanced surgical suite with laminar airflow</p>
-                                <div class="item-date">
-                                    <i class="far fa-calendar"></i> August 15, 2023
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-actions">
-                        <button class="action-btn view-btn" data-id="8">
-                            <i class="fas fa-expand"></i> View
-                        </button>
-                        <button class="action-btn share-btn" data-id="8">
-                            <i class="fas fa-share-alt"></i> Share
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Team Activity 2 -->
-                <div class="gallery-item team" data-title="Annual Staff Meeting">
-                    <div class="gallery-image">
-                        <img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="Annual Staff Meeting" loading="lazy">
-                        <div class="gallery-overlay">
-                            <div class="overlay-content">
-                                <span class="item-category">Team Activities</span>
-                                <h3>Annual Staff Meeting</h3>
-                                <p>Strategic planning and team building session</p>
-                                <div class="item-date">
-                                    <i class="far fa-calendar"></i> July 30, 2023
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-actions">
-                        <button class="action-btn view-btn" data-id="9">
-                            <i class="fas fa-expand"></i> View
-                        </button>
-                        <button class="action-btn share-btn" data-id="9">
-                            <i class="fas fa-share-alt"></i> Share
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Achievement 2 -->
-                <div class="gallery-item achievements" data-title="Accreditation Certificate">
-                    <div class="gallery-image">
-                        <img src="https://images.unsplash.com/photo-1559757149-e9b2c7e8fc4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="Accreditation Certificate" loading="lazy">
-                        <div class="gallery-overlay">
-                            <div class="overlay-content">
-                                <span class="item-category">Achievements</span>
-                                <h3>Accreditation</h3>
-                                <p>ISO 9001:2015 Quality Management Certification</p>
-                                <div class="item-date">
-                                    <i class="far fa-calendar"></i> June 15, 2023
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-actions">
-                        <button class="action-btn view-btn" data-id="10">
-                            <i class="fas fa-expand"></i> View
-                        </button>
-                        <button class="action-btn share-btn" data-id="10">
-                            <i class="fas fa-share-alt"></i> Share
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Community 2 -->
-                <div class="gallery-item community" data-title="School Health Program">
-                    <div class="gallery-image">
-                        <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="School Health Program" loading="lazy">
-                        <div class="gallery-overlay">
-                            <div class="overlay-content">
-                                <span class="item-category">Community</span>
-                                <h3>School Health Program</h3>
-                                <p>Health screening for 1000+ students in local schools</p>
-                                <div class="item-date">
-                                    <i class="far fa-calendar"></i> May 25, 2023
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-actions">
-                        <button class="action-btn view-btn" data-id="11">
-                            <i class="fas fa-expand"></i> View
-                        </button>
-                        <button class="action-btn share-btn" data-id="11">
-                            <i class="fas fa-share-alt"></i> Share
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Video 2 -->
-                <div class="gallery-item videos" data-title="Patient Testimonial">
-                    <div class="gallery-image video-item">
-                        <img src="https://images.unsplash.com/photo-1559757149-f6a8c6dc6c6b?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="Patient Testimonial" loading="lazy">
-                        <div class="video-play">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="gallery-overlay">
-                            <div class="overlay-content">
-                                <span class="item-category">Videos</span>
-                                <h3>Patient Testimonial</h3>
-                                <p>Heartwarming stories from our patients</p>
-                                <div class="item-date">
-                                    <i class="far fa-calendar"></i> April 10, 2023
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-actions">
-                        <button class="action-btn view-btn" data-id="12">
-                            <i class="fas fa-play"></i> Play
-                        </button>
-                        <button class="action-btn share-btn" data-id="12">
-                            <i class="fas fa-share-alt"></i> Share
-                        </button>
-                    </div>
+                <!-- Gallery items will be dynamically loaded from Strapi -->
+                <div class="gallery-loading" style="text-align: center; padding: 50px; grid-column: 1 / -1;">
+                    <div class="loader" style="margin: 0 auto;"></div>
+                    <p style="margin-top: 20px; color: #666;">Loading gallery items from Strapi...</p>
                 </div>
             </div>
 
@@ -436,71 +136,23 @@
         </div>
     </section>
 
-    <!-- Video Gallery -->
+    <!-- Video Gallery 
     <section class="video-gallery">
         <div class="container">
             <div class="section-header">
                 <h2><i class="fas fa-video"></i> Featured Videos</h2>
                 <p>Watch our latest videos and hospital documentaries</p>
-            </div>
+            </div>-->
             
-            <div class="video-grid">
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <img src="https://images.unsplash.com/photo-1586773860418-dc22f8b874bc?ixlib=rb-1.2.1&auto=format&fit=crop&w-600&q=70" alt="Hospital Documentary" loading="lazy">
-                        <div class="play-btn">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">15:30</div>
-                    </div>
-                    <div class="video-info">
-                        <h3>KTRH Documentary 2024</h3>
-                        <p>Complete tour of our hospital facilities and services</p>
-                        <div class="video-meta">
-                            <span><i class="far fa-eye"></i> 2,450 views</span>
-                            <span><i class="far fa-calendar"></i> 2 weeks ago</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <img src="https://images.unsplash.com/photo-1516549655669-df6654e435de?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="Health Tips" loading="lazy">
-                        <div class="play-btn">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">08:15</div>
-                    </div>
-                    <div class="video-info">
-                        <h3>Heart Health Tips</h3>
-                        <p>Expert advice from our cardiology department</p>
-                        <div class="video-meta">
-                            <span><i class="far fa-eye"></i> 1,850 views</span>
-                            <span><i class="far fa-calendar"></i> 1 month ago</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=70" alt="Medical Training" loading="lazy">
-                        <div class="play-btn">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">12:45</div>
-                    </div>
-                    <div class="video-info">
-                        <h3>Medical Training Program</h3>
-                        <p>Behind the scenes of our resident training</p>
-                        <div class="video-meta">
-                            <span><i class="far fa-eye"></i> 3,200 views</span>
-                            <span><i class="far fa-calendar"></i> 2 months ago</span>
-                        </div>
-                    </div>
+           <!-- <div class="video-grid" id="featuredVideosGrid">-->
+                <!-- Featured videos will be dynamically loaded from Strapi 
+                <div class="video-loading" style="text-align: center; padding: 30px; width: 100%;">
+                    <div class="loader" style="margin: 0 auto;"></div>
+                    <p style="margin-top: 15px; color: #666;">Loading featured videos...</p>
                 </div>
             </div>
         </div>
-    </section>
+    </section>-->
 
     <!-- Social Media -->
     <section class="social-media-section">
@@ -511,7 +163,7 @@
             </div>
             
             <div class="social-grid">
-                <a href="#" class="social-card facebook">
+                <a href="https://facebook.com/ktrh" target="_blank" class="social-card facebook">
                     <div class="social-icon">
                         <i class="fab fa-facebook-f"></i>
                     </div>
@@ -520,7 +172,7 @@
                     <span class="social-followers">15K Followers</span>
                 </a>
                 
-                <a href="#" class="social-card twitter">
+                <a href="https://twitter.com/ktrh" target="_blank" class="social-card twitter">
                     <div class="social-icon">
                         <i class="fab fa-twitter"></i>
                     </div>
@@ -529,7 +181,7 @@
                     <span class="social-followers">8.5K Followers</span>
                 </a>
                 
-                <a href="#" class="social-card instagram">
+                <a href="https://instagram.com/ktrh" target="_blank" class="social-card instagram">
                     <div class="social-icon">
                         <i class="fab fa-instagram"></i>
                     </div>
@@ -538,7 +190,7 @@
                     <span class="social-followers">12K Followers</span>
                 </a>
                 
-                <a href="#" class="social-card youtube">
+                <a href="https://youtube.com/ktrh" target="_blank" class="social-card youtube">
                     <div class="social-icon">
                         <i class="fab fa-youtube"></i>
                     </div>
@@ -551,11 +203,11 @@
     </section>
 
     <!-- Image Modal -->
-    <div class="image-modal" id="imageModal">
+    <div class="image-modal" id="imageModal" style="display: none;">
         <div class="modal-content">
             <button class="modal-close" id="modalClose">&times;</button>
             <div class="modal-body">
-                <img id="modalImage" src="" alt="">
+                <img id="modalImage" src="" alt="" loading="lazy">
                 <div class="modal-info">
                     <h2 id="modalTitle"></h2>
                     <p id="modalDescription"></p>
@@ -577,7 +229,7 @@
     </div>
 
     <!-- Video Modal -->
-    <div class="video-modal" id="videoModal">
+    <div class="video-modal" id="videoModal" style="display: none;">
         <div class="modal-content">
             <button class="modal-close" id="videoModalClose">&times;</button>
             <div class="modal-body">
@@ -606,11 +258,11 @@
                     </div>
                     <p class="footer-description">Providing quality healthcare services with compassion and excellence since 2005.</p>
                     <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="https://facebook.com/ktrh" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://twitter.com/ktrh" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="https://instagram.com/ktrh" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://linkedin.com/company/ktrh" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://youtube.com/ktrh" target="_blank"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
 
@@ -690,6 +342,6 @@
     </a>
 
     <script src="js/script.js"></script>
-    <script src="js/gallery.js"></script>
+    <script src="js/gallery-strapi.js"></script>
 </body>
 </html>

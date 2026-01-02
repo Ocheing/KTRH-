@@ -1078,12 +1078,20 @@ window.addEventListener('load', () => {
 
 // Service Worker Registration (for PWA features)
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').then(registration => {
-            console.log('ServiceWorker registration successful');
-        }).catch(err => {
-            console.log('ServiceWorker registration failed: ', err);
-        });
+  // Check if the service worker file exists
+  fetch('/sw.js')
+    .then(response => {
+      if (response.ok) {
+        return navigator.serviceWorker.register('/sw.js');
+      } else {
+        throw new Error('Service worker file not found');
+      }
+    })
+    .then(registration => {
+      console.log('ServiceWorker registered:', registration);
+    })
+    .catch(error => {
+      console.log('ServiceWorker registration skipped:', error.message);
     });
 }
 

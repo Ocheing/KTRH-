@@ -74,6 +74,9 @@
     },
     "order": {
       "type": "integer"
+    },
+    "rating": {
+      "type": "string"
     }
   }
 }

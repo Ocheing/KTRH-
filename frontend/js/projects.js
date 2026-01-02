@@ -1,507 +1,1010 @@
-// Projects Page Functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Elements
-    const categoryBtns = document.querySelectorAll('.category-btn');
-    const projectsSearch = document.getElementById('projectsSearch');
-    const projectCards = document.querySelectorAll('.project-card');
-    const detailsBtns = document.querySelectorAll('.details-btn');
-    const otherActionBtns = document.querySelectorAll('.action-btn:not(.details-btn)');
-    const loadMoreBtn = document.getElementById('loadMore');
-    const projectModal = document.getElementById('projectModal');
-    const modalCloseBtn = document.getElementById('modalClose');
-    const modalBody = document.getElementById('modalBody');
-    const chatWidget = document.getElementById('chatWidget');
-    const chatCloseBtn = document.getElementById('chatClose');
-    const backToTopBtn = document.getElementById('backToTop');
+// ===========================================
+// PROJECTS PAGE - STRAPI INTEGRATION - FIXED VERSION
+// ===========================================
+
+// Shared Strapi API Configuration (same as doctors page)
+const STRAPI_API_URL = 'http://localhost:1337/api';
+const STRAPI_IMAGE_URL = 'http://localhost:1337';
+
+// DOM Elements
+let projectsGrid;
+let categoryButtons;
+let projectsSearch;
+let loadMoreBtn;
+let projectModal;
+let modalBody;
+let modalCloseBtn;
+let searchButton;
+
+// State Management
+let currentCategory = 'all';
+let currentPage = 1;
+const projectsPerPage = 6;
+let allProjects = [];
+let filteredProjects = [];
+let visibleCount = 6;
+
+// Helper function to get attributes from Strapi response
+function getAttributes(data) {
+    if (!data) return null;
     
-    // Project Data for Modal
-    const projectData = {
-        1: {
+    // Handle Strapi v4 response structure
+    if (data.attributes !== undefined) {
+        return data.attributes;
+    }
+    
+    // Handle nested data structure
+    if (data.data && data.data.attributes) {
+        return data.data.attributes;
+    }
+    
+    // Handle direct attributes
+    if (typeof data === 'object' && !Array.isArray(data)) {
+        return data;
+    }
+    
+    console.warn('Unable to extract attributes from:', data);
+    return {};
+}
+
+// Helper function to format date
+function formatDate(dateString) {
+    if (!dateString) return 'Ongoing';
+    
+    try {
+        const date = new Date(dateString);
+        // Handle invalid dates
+        if (isNaN(date.getTime())) {
+            return dateString;
+        }
+        
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+    } catch (error) {
+        console.warn('Error formatting date:', error);
+        return dateString || 'Ongoing';
+    }
+}
+
+// Helper function to get image URL (consistent with doctors page)
+function getImageUrl(imageData) {
+    if (!imageData) {
+        // Return a default project image
+        return 'https://images.unsplash.com/photo-1516549655669-df6654e435de?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80';
+    }
+    
+    let imageUrl = '';
+    
+    // Handle different Strapi image structures
+    if (imageData.data?.attributes?.url) {
+        imageUrl = imageData.data.attributes.url;
+    } else if (imageData.attributes?.url) {
+        imageUrl = imageData.attributes.url;
+    } else if (imageData.url) {
+        imageUrl = imageData.url;
+    } else if (typeof imageData === 'string') {
+        imageUrl = imageData;
+    }
+    
+    // Add base URL if needed
+    if (imageUrl && !imageUrl.startsWith('http')) {
+        imageUrl = `${STRAPI_IMAGE_URL}${imageUrl}`;
+    }
+    
+    return imageUrl || 'https://images.unsplash.com/photo-1516549655669-df6654e435de?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80';
+}
+
+// Function to fetch projects from Strapi
+async function fetchProjects() {
+    try {
+        console.log('Fetching projects from Strapi...');
+        
+        // Use same structure as doctors page
+        const response = await fetch(`${STRAPI_API_URL}/projects?populate=*`);
+        
+        if (!response.ok) {
+            console.error('API response not ok:', response.status, response.statusText);
+            return getFallbackProjects();
+        }
+        
+        const data = await response.json();
+        
+        // Handle Strapi v4 response structure (same as doctors page)
+        let projects = [];
+        if (data.data && Array.isArray(data.data)) {
+            console.log(`Fetched ${data.data.length} projects from API`);
+            projects = data.data;
+        } else if (Array.isArray(data)) {
+            console.log(`Fetched ${data.length} projects from API`);
+            projects = data;
+        } else {
+            console.error('Unexpected API response structure:', data);
+            return getFallbackProjects();
+        }
+        
+        return projects;
+        
+    } catch (error) {
+        console.error('Error fetching projects:', error);
+        return getFallbackProjects();
+    }
+}
+
+// Function to calculate project statistics from the projects data
+function calculateProjectStats(projects) {
+    console.log('Calculating project statistics...');
+    
+    // Initialize counters
+    let activeProjects = 0;
+    let completedProjects = 0;
+    let upcomingProjects = 0;
+    let totalInvestment = 0;
+    let partnerOrganizations = new Set();
+    
+    // Calculate from projects
+    projects.forEach(project => {
+        const attributes = getAttributes(project);
+        const category = attributes?.category || 'ongoing';
+        
+        // Count by category
+        if (category === 'ongoing') activeProjects++;
+        if (category === 'completed') completedProjects++;
+        if (category === 'upcoming') upcomingProjects++;
+        
+        // Extract investment value (try to parse budget string)
+        if (attributes?.budget) {
+            const budgetStr = attributes.budget.toString();
+            // Try to extract numeric value (e.g., "KES 850M" -> 850)
+            const match = budgetStr.match(/[\d.]+/);
+            if (match) {
+                const value = parseFloat(match[0]);
+                // Handle multipliers (M for million, B for billion)
+                if (budgetStr.includes('B')) {
+                    totalInvestment += value * 1000; // Convert billion to million
+                } else if (budgetStr.includes('M')) {
+                    totalInvestment += value;
+                } else {
+                    totalInvestment += value / 1000000; // Assume it's in regular units
+                }
+            }
+        }
+        
+        // Add partners to set (unique)
+        if (attributes?.partner) {
+            partnerOrganizations.add(attributes.partner);
+        }
+        if (attributes?.contractor) {
+            partnerOrganizations.add(attributes.contractor);
+        }
+    });
+    
+    // Format total investment
+    let formattedInvestment;
+    if (totalInvestment >= 1000) {
+        formattedInvestment = `KES ${(totalInvestment / 1000).toFixed(1)}B`;
+    } else {
+        formattedInvestment = `KES ${totalInvestment.toFixed(1)}M`;
+    }
+    
+    return {
+        totalProjects: projects.length,
+        activeProjects: activeProjects,
+        completedProjects: completedProjects,
+        upcomingProjects: upcomingProjects,
+        totalInvestment: formattedInvestment,
+        partnerOrganizations: partnerOrganizations.size
+    };
+}
+
+// Fallback project data
+function getFallbackProjects() {
+    console.log('Using fallback project data');
+    return [
+        {
             id: 1,
-            title: "Cardiac Center Expansion",
-            status: "ongoing",
-            progress: 75,
-            description: "Construction of a new 5-story cardiac center that will serve as a regional hub for cardiac care. The facility will feature state-of-the-art catheterization labs, cardiac ICU, rehabilitation center, and research facilities.",
-            category: "Infrastructure",
-            timeline: {
-                start: "January 2024",
-                end: "December 2024",
-                phases: [
-                    { date: "Jan-Mar 2024", event: "Site preparation and foundation" },
-                    { date: "Apr-Jun 2024", event: "Structural construction" },
-                    { date: "Jul-Sep 2024", event: "Interior work and installations" },
-                    { date: "Oct-Dec 2024", event: "Equipment installation and commissioning" }
+            attributes: {
+                title: "New Cardiac Center",
+                shortDescription: "State-of-the-art cardiac care facility with 50 beds",
+                category: "ongoing",
+                status: "75% Complete",
+                progress: 75,
+                startDate: "2024-01-01",
+                endDate: "2024-12-31",
+                budget: "KES 850M",
+                contractor: "BuildRight Constructions",
+                image: {
+                    data: {
+                        attributes: {
+                            url: "/uploads/cardiac_center_12345.jpg"
+                        }
+                    }
+                },
+                impact: [
+                    "50-bed facility with 5 cath labs",
+                    "Regional cardiac care hub",
+                    "200+ permanent jobs created"
                 ]
-            },
-            budget: {
-                total: "KES 850,000,000",
-                spent: "KES 637,500,000",
-                source: "Ministry of Health (60%), County Government (30%), Donor Funding (10%)"
-            },
-            team: {
-                contractor: "BuildRight Constructions Ltd",
-                projectManager: "Eng. Sarah Kimani",
-                medicalDirector: "Dr. Michael Otieno",
-                teamSize: "150+ workers"
-            },
-            impact: {
-                capacity: "50-bed facility with 5 cath labs",
-                serviceArea: "Western Kenya region (5 million people)",
-                jobCreation: "200+ permanent jobs after completion",
-                training: "Cardiology fellowship program"
-            },
-            milestones: [
-                "Foundation work completed (March 2024)",
-                "Structural steel work 80% complete",
-                "Medical equipment ordered",
-                "Staff recruitment initiated"
-            ],
-            gallery: ["img1.jpg", "img2.jpg", "img3.jpg"]
+            }
         },
-        2: {
+        {
             id: 2,
-            title: "Diagnostic Imaging Center",
-            status: "completed",
-            description: "Modern diagnostic imaging center featuring 3T MRI, 128-slice CT scan, digital X-ray, and ultrasound systems. The center has significantly reduced waiting times and improved diagnostic accuracy.",
-            category: "Infrastructure",
-            completionDate: "December 15, 2023",
-            investment: "KES 450,000,000",
-            partner: "GE Healthcare",
-            features: [
-                "3T MRI with advanced neuro sequences",
-                "128-slice CT scanner with cardiac imaging",
-                "Digital X-ray with PACS integration",
-                "High-resolution ultrasound systems",
-                "Teleradiology capabilities"
-            ],
-            achievements: [
-                "70% reduction in scan waiting times",
-                "100+ patients served daily",
-                "Regional referral center status achieved",
-                "ISO 9001:2015 certification",
-                "24/7 emergency imaging services"
-            ],
-            statistics: {
-                patientsServed: "25,000+ since opening",
-                scanAccuracy: "98.5% diagnostic accuracy",
-                waitTime: "Average 24 hours (from 5 days)",
-                satisfaction: "94% patient satisfaction"
-            },
-            team: {
-                leadRadiologist: "Dr. Lucy Wanjiku",
-                technicians: "15 certified technicians",
-                supportStaff: "10 administrative staff"
-            }
-        },
-        3: {
-            id: 3,
-            title: "Cancer Research & Treatment Center",
-            status: "ongoing",
-            progress: 60,
-            description: "Comprehensive cancer research program focusing on cancers prevalent in the region. The program includes clinical trials, community screening, and multidisciplinary treatment approaches.",
-            category: "Research",
-            timeline: {
-                start: "January 2023",
-                end: "December 2025",
-                phases: [
-                    { date: "2023", event: "Research lab setup and staff training" },
-                    { date: "2024", event: "Community screening programs" },
-                    { date: "2025", event: "Clinical trials and treatment protocols" }
+            attributes: {
+                title: "MRI & CT Scan Center",
+                shortDescription: "Advanced diagnostic imaging facility serving 100+ patients daily",
+                category: "completed",
+                status: "Completed",
+                progress: 100,
+                startDate: "2023-01-01",
+                endDate: "2023-12-15",
+                budget: "KES 450M",
+                partner: "GE Healthcare",
+                image: {
+                    data: {
+                        attributes: {
+                            url: "/uploads/mri_center_12345.jpg"
+                        }
+                    }
+                },
+                impact: [
+                    "Reduced waiting time for scans by 70%",
+                    "Serving 100+ patients daily",
+                    "Regional referral center"
                 ]
-            },
-            funding: {
-                total: "KES 320,000,000",
-                sources: ["WHO Grant (40%)", "Research Council (30%)", "University Partnership (30%)"]
-            },
-            partners: ["World Health Organization", "Kisii University", "Kenya Medical Research Institute"],
-            focusAreas: [
-                "Breast cancer screening and treatment",
-                "Cervical cancer prevention",
-                "Prostate cancer research",
-                "Palliative care development",
-                "Community awareness programs"
-            ],
-            achievements: [
-                "500+ patients screened in first year",
-                "Research laboratory established",
-                "Two clinical trials initiated",
-                "Community health worker training completed",
-                "Mobile screening unit operational"
-            ],
-            team: {
-                principalInvestigator: "Dr. James Omondi",
-                researchers: "8 research fellows",
-                clinicians: "5 oncology specialists",
-                communityWorkers: "20 trained volunteers"
             }
         },
-        4: {
+        {
+            id: 3,
+            attributes: {
+                title: "Cancer Research Program",
+                shortDescription: "Regional cancer treatment and research program",
+                category: "ongoing",
+                status: "60% Complete",
+                progress: 60,
+                startDate: "2023-01-01",
+                endDate: "2025-12-31",
+                budget: "KES 320M",
+                partner: "WHO, Kisii University",
+                image: {
+                    data: {
+                        attributes: {
+                            url: "/uploads/cancer_research_12345.jpg"
+                        }
+                    }
+                },
+                impact: [
+                    "Advanced cancer treatment",
+                    "Research collaboration",
+                    "Training for medical staff"
+                ]
+            }
+        },
+        {
             id: 4,
-            title: "Children's Hospital Wing",
-            status: "upcoming",
-            description: "Dedicated pediatric care facility designed to provide comprehensive healthcare for children in a child-friendly environment. The wing will feature specialized pediatric units and family support services.",
-            category: "Infrastructure",
-            timeline: {
-                start: "Q3 2024",
-                end: "Q4 2025",
-                duration: "18 months"
-            },
-            budget: "KES 1,200,000,000",
-            fundingStatus: "70% secured (Ministry of Health), 30% pending",
-            capacity: "100 beds including 20 NICU and 15 PICU beds",
-            features: [
-                "Child-friendly interior design with play areas",
-                "Family accommodation facilities",
-                "Pediatric emergency department",
-                "Child life specialists and play therapy",
-                "School and education support",
-                "Outdoor playground and garden"
-            ],
-            departments: [
-                "Pediatric Cardiology",
-                "Neonatal Intensive Care Unit",
-                "Pediatric Oncology",
-                "Child Psychiatry",
-                "Adolescent Medicine",
-                "Pediatric Surgery"
-            ],
-            impact: {
-                serviceArea: "Western and Nyanza regions",
-                targetPatients: "Children aged 0-18 years",
-                expectedPatients: "15,000+ annually",
-                jobCreation: "300+ healthcare jobs"
-            },
-            partners: ["Ministry of Health", "Children's Hospital Foundation", "UNICEF"]
+            attributes: {
+                title: "Children's Wing Expansion",
+                shortDescription: "Expansion of pediatric services with 30 new beds",
+                category: "upcoming",
+                status: "Planning Phase",
+                progress: 10,
+                startDate: "2024-06-01",
+                endDate: "2025-05-31",
+                budget: "KES 280M",
+                image: {
+                    data: {
+                        attributes: {
+                            url: "/uploads/children_wing_12345.jpg"
+                        }
+                    }
+                }
+            }
+        }
+    ];
+}
+
+// Function to animate counting numbers
+function animateCount(element, target, duration = 2000) {
+    if (!element) return;
+    
+    const start = 0;
+    const increment = target / (duration / 16); // 60fps
+    let current = start;
+    
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            current = target;
+            clearInterval(timer);
+        }
+        
+        // Format number with + if it's a whole number
+        if (current === target && target >= 10) {
+            element.textContent = target + '+';
+        } else {
+            element.textContent = Math.floor(current);
+        }
+    }, 16);
+}
+
+// Function to render project card
+function renderProjectCard(project) {
+    const attributes = getAttributes(project);
+    if (!attributes) {
+        return '<div class="project-card error">Error: Project data missing</div>';
+    }
+    
+    const category = attributes.category || 'ongoing';
+    const status = attributes.status || 'In Progress';
+    const progress = attributes.progress || 0;
+    const title = attributes.title || 'Project Title';
+    const shortDescription = attributes.shortDescription || 'Project description';
+    const imageUrl = getImageUrl(attributes.image);
+    const projectId = project.id || '';
+    
+    // Determine badge class based on category
+    let badgeClass = category;
+    if (category === 'ongoing') badgeClass = 'ongoing';
+    if (category === 'completed') badgeClass = 'completed';
+    if (category === 'upcoming') badgeClass = 'upcoming';
+    
+    // Format timeline
+    const timeline = `${formatDate(attributes.startDate)} - ${formatDate(attributes.endDate)}`;
+    
+    return `
+        <div class="project-card ${category}" 
+             data-title="${title}" 
+             data-id="${projectId}"
+             data-category="${category}">
+            
+            <div class="project-image">
+                <img src="${imageUrl}" alt="${title}" loading="lazy">
+                <div class="project-badge ${badgeClass}">${status}</div>
+                <div class="project-overlay">
+                    <div class="overlay-content">
+                        <span class="project-category">${category.charAt(0).toUpperCase() + category.slice(1)}</span>
+                        <h3>${title}</h3>
+                        <p>${shortDescription.substring(0, 100)}${shortDescription.length > 100 ? '...' : ''}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="project-content">
+                <div class="project-header">
+                    <h2>${title}</h2>
+                    <span class="project-status ${badgeClass}">${status}</span>
+                </div>
+                
+                <p class="project-description">
+                    ${shortDescription}
+                </p>
+                
+                <div class="project-details">
+                    <div class="detail">
+                        <i class="fas fa-calendar-alt"></i>
+                        <div>
+                            <strong>Timeline</strong>
+                            <span>${timeline}</span>
+                        </div>
+                    </div>
+                    <div class="detail">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <div>
+                            <strong>Budget</strong>
+                            <span>${attributes.budget || 'Not specified'}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                ${progress > 0 ? `
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%;"></div>
+                    </div>
+                    <span class="progress-text">${progress}% Complete</span>
+                </div>
+                ` : ''}
+                
+                <div class="project-actions">
+                    <button class="action-btn details-btn" data-id="${projectId}">
+                        <i class="fas fa-info-circle"></i> View Details
+                    </button>
+                    ${attributes.partner || attributes.contractor ? `
+                    <button class="action-btn partner-btn" data-id="${projectId}">
+                        <i class="fas fa-handshake"></i> Partners
+                    </button>
+                    ` : ''}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Function to render statistics with animation
+function renderStatistics(stats) {
+    const statsGrid = document.getElementById('statsGrid');
+    if (!statsGrid) return;
+    
+    console.log('Rendering statistics:', stats);
+    
+    statsGrid.innerHTML = `
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-hard-hat"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-number" id="total-projects-count">0</h3>
+                <p class="stat-label">Total Projects</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-tools"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-number" id="active-projects-count">0</h3>
+                <p class="stat-label">Active Projects</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-number" id="completed-projects-count">0</h3>
+                <p class="stat-label">Completed</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-hand-holding-usd"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-number" id="total-investment-count">KES 0</h3>
+                <p class="stat-label">Total Investment</p>
+            </div>
+        </div>
+    `;
+    
+    // Animate the counts
+    setTimeout(() => {
+        const totalEl = document.getElementById('total-projects-count');
+        const activeEl = document.getElementById('active-projects-count');
+        const completedEl = document.getElementById('completed-projects-count');
+        const investmentEl = document.getElementById('total-investment-count');
+        
+        if (totalEl) animateCount(totalEl, stats.totalProjects, 1500);
+        if (activeEl) animateCount(activeEl, stats.activeProjects, 1500);
+        if (completedEl) animateCount(completedEl, stats.completedProjects, 1500);
+        
+        // Special handling for investment (text, not number)
+        if (investmentEl) {
+            investmentEl.textContent = stats.totalInvestment;
+        }
+    }, 500);
+}
+
+// Function to filter projects by category
+function filterProjectsByCategory(category) {
+    console.log('Filtering projects by category:', category);
+    
+    currentCategory = category;
+    currentPage = 1;
+    visibleCount = 6;
+    
+    // Update active button
+    if (categoryButtons) {
+        categoryButtons.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-category') === category) {
+                btn.classList.add('active');
+            }
+        });
+    }
+    
+    if (category === 'all') {
+        filteredProjects = [...allProjects];
+    } else {
+        filteredProjects = allProjects.filter(project => {
+            const attributes = getAttributes(project);
+            return attributes.category === category;
+        });
+    }
+    
+    console.log(`Found ${filteredProjects.length} projects in "${category}" category`);
+    renderProjectsGrid();
+    updateLoadMoreButton();
+}
+
+// Function to search projects
+function searchProjects(searchTerm) {
+    const term = searchTerm.toLowerCase().trim();
+    currentPage = 1;
+    visibleCount = 6;
+    
+    if (!term) {
+        filteredProjects = currentCategory === 'all' 
+            ? [...allProjects] 
+            : allProjects.filter(p => getAttributes(p).category === currentCategory);
+    } else {
+        filteredProjects = allProjects.filter(project => {
+            const attributes = getAttributes(project);
+            const title = (attributes.title || '').toLowerCase();
+            const description = (attributes.shortDescription || '').toLowerCase();
+            const category = (attributes.category || '').toLowerCase();
+            const status = (attributes.status || '').toLowerCase();
+            
+            return title.includes(term) || 
+                   description.includes(term) || 
+                   category.includes(term) ||
+                   status.includes(term);
+        });
+    }
+    
+    renderProjectsGrid();
+    updateLoadMoreButton();
+}
+
+// Function to render projects grid
+function renderProjectsGrid() {
+    if (!projectsGrid) {
+        console.error('Projects grid element not found');
+        return;
+    }
+    
+    // Check if no projects
+    if (filteredProjects.length === 0) {
+        projectsGrid.innerHTML = `
+            <div class="no-projects-message">
+                <i class="fas fa-hard-hat" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+                <h3>No Projects Found</h3>
+                <p>${currentCategory !== 'all' ? 'No projects in this category.' : 'No projects match your search criteria.'}</p>
+                ${currentCategory !== 'all' ? `<p>Try selecting "All Projects" to see all available projects.</p>` : ''}
+            </div>
+        `;
+        return;
+    }
+    
+    // Calculate which projects to show
+    const startIndex = 0;
+    const endIndex = Math.min(visibleCount, filteredProjects.length);
+    const projectsToShow = filteredProjects.slice(startIndex, endIndex);
+    
+    projectsGrid.innerHTML = projectsToShow.map(project => renderProjectCard(project)).join('');
+    
+    // Re-attach event listeners
+    attachProjectEventListeners();
+}
+
+// Function to update load more button visibility
+function updateLoadMoreButton() {
+    if (loadMoreBtn) {
+        if (filteredProjects.length > visibleCount) {
+            loadMoreBtn.style.display = 'block';
+            loadMoreBtn.disabled = false;
+            loadMoreBtn.innerHTML = '<i class="fas fa-plus"></i> Load More Projects';
+        } else {
+            loadMoreBtn.style.display = 'none';
+        }
+    }
+}
+
+// Function to load more projects
+function loadMoreProjects() {
+    if (!loadMoreBtn) return;
+    
+    loadMoreBtn.disabled = true;
+    loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+    
+    // Increase visible count
+    visibleCount += 6;
+    
+    setTimeout(() => {
+        renderProjectsGrid();
+        updateLoadMoreButton();
+        
+        loadMoreBtn.disabled = false;
+        loadMoreBtn.innerHTML = '<i class="fas fa-plus"></i> Load More Projects';
+    }, 500);
+}
+
+// Function to attach event listeners to project cards
+function attachProjectEventListeners() {
+    // Details buttons
+    document.querySelectorAll('.details-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const projectId = this.getAttribute('data-id');
+            console.log('View Details clicked for project ID:', projectId);
+            showProjectDetails(projectId);
+        });
+    });
+    
+    // Partner buttons
+    document.querySelectorAll('.partner-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const projectId = this.getAttribute('data-id');
+            showProjectPartners(projectId);
+        });
+    });
+}
+
+// Function to show project details - FIXED VERSION
+async function showProjectDetails(projectId) {
+    console.log('Showing project details for ID:', projectId);
+    
+    try {
+        // First, try to fetch detailed project data from Strapi
+        const response = await fetch(`${STRAPI_API_URL}/projects/${projectId}?populate=*`);
+        
+        if (!response.ok) {
+            console.warn('Failed to fetch project details from API, using cached data');
+            // Fallback to project from local data
+            const project = allProjects.find(p => p.id == projectId);
+            if (project) {
+                showProjectModal(project);
+            } else {
+                throw new Error('Project not found in local data');
+            }
+            return;
+        }
+        
+        const data = await response.json();
+        const project = data.data || data;
+        
+        if (!project) {
+            throw new Error('Project data not found in response');
+        }
+        
+        showProjectModal(project);
+        
+    } catch (error) {
+        console.error('Error in showProjectDetails:', error);
+        
+        // Create a simple modal if none exists
+        createFallbackModal(projectId);
+    }
+}
+
+// Function to create a fallback modal if the main modal doesn't exist
+function createFallbackModal(projectId) {
+    const project = allProjects.find(p => p.id == projectId);
+    if (!project) {
+        alert('Project details not available.');
+        return;
+    }
+    
+    const attributes = getAttributes(project);
+    const title = attributes.title || 'Project';
+    
+    // Create modal HTML dynamically
+    const modalHTML = `
+        <div class="modal" id="dynamicProjectModal" style="display: flex; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center;">
+            <div class="modal-content" style="background-color: #fefefe; margin: auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 800px; border-radius: 10px; max-height: 90vh; overflow-y: auto;">
+                <span class="close" style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+                <h2>${title}</h2>
+                <div id="dynamicModalBody">
+                    Loading project details...
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remove any existing dynamic modal
+    const existingModal = document.getElementById('dynamicProjectModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Add modal to body
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    // Add content to modal
+    const modalBody = document.getElementById('dynamicModalBody');
+    if (modalBody) {
+        const imageUrl = getImageUrl(attributes.image);
+        modalBody.innerHTML = `
+            <div style="margin-top: 20px;">
+                <img src="${imageUrl}" alt="${title}" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px;">
+                <p><strong>Description:</strong> ${attributes.shortDescription || 'No description available.'}</p>
+                <p><strong>Status:</strong> ${attributes.status || 'In Progress'}</p>
+                <p><strong>Category:</strong> ${attributes.category || 'ongoing'}</p>
+                <p><strong>Timeline:</strong> ${formatDate(attributes.startDate)} - ${formatDate(attributes.endDate)}</p>
+                <p><strong>Budget:</strong> ${attributes.budget || 'Not specified'}</p>
+                ${attributes.progress ? `<p><strong>Progress:</strong> ${attributes.progress}%</p>` : ''}
+                <div style="margin-top: 20px;">
+                    <a href="contact.html?project=${encodeURIComponent(title)}" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Inquire About Project</a>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Add close functionality
+    const modal = document.getElementById('dynamicProjectModal');
+    const closeBtn = modal.querySelector('.close');
+    
+    closeBtn.onclick = function() {
+        modal.remove();
+        document.body.style.overflow = 'auto';
+    };
+    
+    // Close when clicking outside
+    modal.onclick = function(event) {
+        if (event.target === modal) {
+            modal.remove();
+            document.body.style.overflow = 'auto';
         }
     };
     
-    // Category Filter Functionality
-    categoryBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const category = this.getAttribute('data-category');
-            
-            // Update active button
-            categoryBtns.forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Filter cards
-            projectCards.forEach(card => {
-                if (category === 'all' || card.classList.contains(category)) {
-                    card.style.display = 'block';
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0)';
-                    }, 10);
-                } else {
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(20px)';
-                    setTimeout(() => {
-                        card.style.display = 'none';
-                    }, 300);
-                }
-            });
-        });
-    });
+    // Prevent body scrolling
+    document.body.style.overflow = 'hidden';
+}
+
+// Function to show project modal - SIMPLIFIED VERSION
+function showProjectModal(project) {
+    console.log('Showing project modal for:', getAttributes(project)?.title);
     
-    // Search Functionality
-    projectsSearch.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase().trim();
+    // Try to use existing modal first
+    const existingModal = document.getElementById('projectModal') || document.getElementById('doctorModal');
+    const existingModalBody = document.getElementById('modalBody') || document.getElementById('doctorModalBody');
+    
+    if (existingModal && existingModalBody) {
+        // Use existing modal
+        const attributes = getAttributes(project);
+        const title = attributes.title || 'Project';
+        const imageUrl = getImageUrl(attributes.image);
         
-        projectCards.forEach(card => {
-            const title = card.getAttribute('data-title').toLowerCase();
-            const description = card.querySelector('.project-description').textContent.toLowerCase();
-            const category = Array.from(card.classList)
-                .find(cls => cls !== 'project-card' && cls !== 'ongoing' && cls !== 'completed' && cls !== 'upcoming') || '';
-            
-            const matches = title.includes(searchTerm) || 
-                           description.includes(searchTerm) || 
-                           category.includes(searchTerm);
-            
-            if (matches) {
-                card.style.display = 'block';
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, 10);
-            } else {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    card.style.display = 'none';
-                }, 300);
-            }
-        });
-    });
-    
-    // Project Details Modal
-    detailsBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const projectId = parseInt(this.getAttribute('data-id'));
-            
-            if (projectData[projectId]) {
-                showProjectModal(projectData[projectId]);
-            }
-        });
-    });
-    
-    // Other Action Buttons
-    otherActionBtns.forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const projectId = parseInt(this.getAttribute('data-id'));
-            const action = this.classList[1]; // Gets the second class (e.g., updates-btn, gallery-btn)
-            
-            handleProjectAction(projectId, action);
-        });
-    });
-    
-    function showProjectModal(project) {
-        let modalHTML = `
+        existingModalBody.innerHTML = `
             <div class="modal-header">
-                <span class="modal-status ${project.status}">${project.status.toUpperCase()}</span>
-                <h2>${project.title}</h2>
+                <div class="modal-header-content">
+                    <h2>${title}</h2>
+                    <span class="modal-category ${attributes.category || 'ongoing'}">${attributes.category || 'Ongoing'}</span>
+                </div>
             </div>
             
-            <p class="modal-description">${project.description}</p>
-            
-            <div class="modal-details-grid">
-        `;
-        
-        // Status-specific content
-        if (project.status === 'ongoing') {
-            modalHTML += `
-                <div class="modal-section">
-                    <h3><i class="fas fa-chart-line"></i> Progress</h3>
-                    <div class="progress-bar" style="margin: 15px 0;">
-                        <div class="progress-fill" style="width: ${project.progress}%;"></div>
-                        <span class="progress-text">${project.progress}% Complete</span>
-                    </div>
-                    <p><strong>Timeline:</strong> ${project.timeline.start} - ${project.timeline.end}</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h3><i class="fas fa-money-bill-wave"></i> Budget</h3>
-                    <p><strong>Total Budget:</strong> ${project.budget.total}</p>
-                    <p><strong>Amount Spent:</strong> ${project.budget.spent}</p>
-                    <p><strong>Funding Sources:</strong> ${project.budget.source}</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h3><i class="fas fa-users"></i> Project Team</h3>
-                    <ul>
-                        <li><strong>Contractor:</strong> ${project.team.contractor}</li>
-                        <li><strong>Project Manager:</strong> ${project.team.projectManager}</li>
-                        <li><strong>Medical Director:</strong> ${project.team.medicalDirector}</li>
-                        <li><strong>Team Size:</strong> ${project.team.teamSize}</li>
-                    </ul>
-                </div>
-            `;
-        } else if (project.status === 'completed') {
-            modalHTML += `
-                <div class="modal-section">
-                    <h3><i class="fas fa-calendar-check"></i> Completion Details</h3>
-                    <p><strong>Completed:</strong> ${project.completionDate}</p>
-                    <p><strong>Investment:</strong> ${project.investment}</p>
-                    <p><strong>Partner:</strong> ${project.partner}</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h3><i class="fas fa-trophy"></i> Achievements</h3>
-                    <ul>
-                        ${project.achievements.map(achievement => `<li>${achievement}</li>`).join('')}
-                    </ul>
-                </div>
-                
-                <div class="modal-section">
-                    <h3><i class="fas fa-chart-bar"></i> Statistics</h3>
-                    <div class="stats-grid-modal">
-                        <div class="stat-item-modal">
-                            <h4>${project.statistics.patientsServed.split('+')[0]}+</h4>
-                            <p>Patients Served</p>
-                        </div>
-                        <div class="stat-item-modal">
-                            <h4>${project.statistics.scanAccuracy}</h4>
-                            <p>Diagnostic Accuracy</p>
-                        </div>
-                        <div class="stat-item-modal">
-                            <h4>${project.statistics.waitTime}</h4>
-                            <p>Average Wait Time</p>
-                        </div>
-                        <div class="stat-item-modal">
-                            <h4>${project.statistics.satisfaction}</h4>
-                            <p>Patient Satisfaction</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-        } else if (project.status === 'upcoming') {
-            modalHTML += `
-                <div class="modal-section">
-                    <h3><i class="fas fa-calendar-alt"></i> Timeline</h3>
-                    <p><strong>Start Date:</strong> ${project.timeline.start}</p>
-                    <p><strong>End Date:</strong> ${project.timeline.end}</p>
-                    <p><strong>Duration:</strong> ${project.timeline.duration}</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h3><i class="fas fa-money-bill-wave"></i> Funding</h3>
-                    <p><strong>Total Budget:</strong> ${project.budget}</p>
-                    <p><strong>Funding Status:</strong> ${project.fundingStatus}</p>
-                </div>
-                
-                <div class="modal-section">
-                    <h3><i class="fas fa-star"></i> Key Features</h3>
-                    <ul>
-                        ${project.features.map(feature => `<li>${feature}</li>`).join('')}
-                    </ul>
-                </div>
-            `;
-        }
-        
-        // Common sections
-        if (project.impact) {
-            modalHTML += `
-                <div class="modal-section">
-                    <h3><i class="fas fa-bullseye"></i> Project Impact</h3>
-                    <ul>
-                        ${Object.entries(project.impact).map(([key, value]) => `<li><strong>${key.replace(/([A-Z])/g, ' $1').toUpperCase()}:</strong> ${value}</li>`).join('')}
-                    </ul>
-                </div>
-            `;
-        }
-        
-        if (project.milestones) {
-            modalHTML += `
-                <div class="modal-section">
-                    <h3><i class="fas fa-flag-checkered"></i> Milestones</h3>
-                    <ul>
-                        ${project.milestones.map(milestone => `<li>${milestone}</li>`).join('')}
-                    </ul>
-                </div>
-            `;
-        }
-        
-        if (project.timeline && project.timeline.phases) {
-            modalHTML += `
-                <div class="modal-timeline">
-                    <h3><i class="fas fa-project-diagram"></i> Project Timeline</h3>
-                    ${project.timeline.phases.map(phase => `
-                        <div class="timeline-item">
-                            <div class="timeline-date">${phase.date}</div>
-                            <div class="timeline-content">
-                                <h4>${phase.event}</h4>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
-        
-        modalHTML += `
+            <div class="modal-image">
+                <img src="${imageUrl}" alt="${title}">
             </div>
             
-            <div class="modal-actions">
-                <button class="modal-action-btn primary" onclick="window.location.href='contact.html?subject=Project Inquiry: ${project.title}'">
-                    <i class="fas fa-envelope"></i> Inquire About Project
-                </button>
-                <button class="modal-action-btn secondary" onclick="window.print()">
-                    <i class="fas fa-print"></i> Print Details
-                </button>
+            <div class="modal-details">
+                <p><strong>Description:</strong> ${attributes.shortDescription || 'No description available.'}</p>
+                <p><strong>Status:</strong> ${attributes.status || 'In Progress'}</p>
+                <p><strong>Timeline:</strong> ${formatDate(attributes.startDate)} - ${formatDate(attributes.endDate)}</p>
+                <p><strong>Budget:</strong> ${attributes.budget || 'Not specified'}</p>
+                ${attributes.progress ? `<p><strong>Progress:</strong> ${attributes.progress}%</p>` : ''}
+                
+                ${attributes.impact ? `
+                <div style="margin-top: 15px;">
+                    <h4>Impact:</h4>
+                    <ul>
+                        ${Array.isArray(attributes.impact) ? 
+                          attributes.impact.map(item => `<li>${item}</li>`).join('') : 
+                          `<li>${attributes.impact}</li>`}
+                    </ul>
+                </div>
+                ` : ''}
+                
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button onclick="closeProjectModal()" style="padding: 10px 20px; background: #f0f0f0; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+                    <a href="contact.html?project=${encodeURIComponent(title)}" style="padding: 10px 20px; background: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">Inquire About Project</a>
+                </div>
             </div>
         `;
         
-        modalBody.innerHTML = modalHTML;
-        projectModal.style.display = 'flex';
+        existingModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    } else {
+        // Create fallback modal
+        createFallbackModal(project.id);
+    }
+}
+
+// Function to show project partners
+function showProjectPartners(projectId) {
+    const project = allProjects.find(p => p.id == projectId);
+    if (!project) return;
+    
+    const attributes = getAttributes(project);
+    
+    // Use the same modal approach
+    const existingModal = document.getElementById('projectModal') || document.getElementById('doctorModal');
+    const existingModalBody = document.getElementById('modalBody') || document.getElementById('doctorModalBody');
+    
+    if (existingModal && existingModalBody) {
+        existingModalBody.innerHTML = `
+            <div style="padding: 20px;">
+                <h2>${attributes.title || 'Project'} - Partners</h2>
+                <div style="margin-top: 20px;">
+                    ${attributes.contractor ? `
+                    <div style="margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <strong>Main Contractor:</strong>
+                        <p>${attributes.contractor}</p>
+                    </div>
+                    ` : ''}
+                    
+                    ${attributes.partner ? `
+                    <div style="margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <strong>Project Partner:</strong>
+                        <p>${attributes.partner}</p>
+                    </div>
+                    ` : ''}
+                </div>
+                <button onclick="closeProjectModal()" style="padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+            </div>
+        `;
+        
+        existingModal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
+}
+
+// Function to close project modal - UNIVERSAL FUNCTION
+function closeProjectModal() {
+    // Try all possible modal IDs
+    const modals = [
+        document.getElementById('projectModal'),
+        document.getElementById('doctorModal'),
+        document.getElementById('dynamicProjectModal')
+    ];
     
-    function handleProjectAction(projectId, action) {
-        const project = projectData[projectId];
-        if (!project) return;
-        
-        switch(action) {
-            case 'updates-btn':
-                alert(`Latest updates for "${project.title}" would be displayed here.\n\nThis feature would show recent progress reports, photos, and announcements.`);
-                break;
-                
-            case 'gallery-btn':
-                alert(`Photo gallery for "${project.title}" would open here.\n\nThis would show construction progress photos, completed work, and project milestones.`);
-                break;
-                
-            case 'research-btn':
-                alert(`Research papers and publications for "${project.title}" would be available here.\n\nThis would include clinical trial results, research findings, and academic publications.`);
-                break;
-                
-            case 'support-btn':
-                window.location.href = `contact.html?subject=Support Project: ${project.title}`;
-                break;
-                
-            case 'case-study-btn':
-                alert(`Case study for "${project.title}" would open here.\n\nThis would include detailed analysis, lessons learned, and impact assessment.`);
-                break;
-                
-            case 'demo-btn':
-                alert(`Live demo of "${project.title}" would start here.\n\nThis would show the telemedicine platform in action or a virtual tour of the facility.`);
-                break;
-        }
-    }
-    
-    // Close Modal
-    modalCloseBtn.addEventListener('click', closeModal);
-    
-    // Close modal when clicking outside
-    projectModal.addEventListener('click', function(e) {
-        if (e.target === projectModal) {
-            closeModal();
+    modals.forEach(modal => {
+        if (modal) {
+            modal.style.display = 'none';
         }
     });
     
-    function closeModal() {
-        projectModal.style.display = 'none';
-        document.body.style.overflow = 'auto';
+    // Restore body scrolling
+    document.body.style.overflow = 'auto';
+}
+
+// Function to setup event listeners
+function setupEventListeners() {
+    // Category filter buttons
+    if (categoryButtons) {
+        categoryButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const category = this.getAttribute('data-category');
+                filterProjectsByCategory(category);
+            });
+        });
     }
     
-    // Load More Functionality
-    loadMoreBtn.addEventListener('click', function() {
-        // Simulate loading more projects
-        const spinner = document.createElement('div');
-        spinner.className = 'loader';
-        spinner.style.margin = '20px auto';
-        this.parentElement.appendChild(spinner);
-        
-        this.disabled = true;
-        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
-        
-        // Simulate API call delay
-        setTimeout(() => {
-            spinner.remove();
-            this.disabled = false;
-            this.innerHTML = '<i class="fas fa-plus"></i> Load More Projects';
-            
-            // Show message (in real app, you would append new projects)
-            alert('More projects would load here. This is a demo.');
-        }, 1500);
+    // Search functionality
+    if (projectsSearch) {
+        projectsSearch.addEventListener('input', function(e) {
+            const searchTerm = e.target.value;
+            searchProjects(searchTerm);
+        });
+    }
+    
+    // Search button
+    if (searchButton) {
+        searchButton.addEventListener('click', function() {
+            searchProjects(projectsSearch.value);
+        });
+    }
+    
+    // Load more button
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', loadMoreProjects);
+    }
+    
+    // Modal close buttons (try multiple selectors)
+    const closeButtons = [
+        document.getElementById('modalClose'),
+        document.getElementById('doctorModalClose'),
+        document.querySelector('.modal .close')
+    ];
+    
+    closeButtons.forEach(btn => {
+        if (btn) {
+            btn.addEventListener('click', closeProjectModal);
+        }
     });
     
-    // Partners slider auto-scroll
-    const partnersTrack = document.querySelector('.partners-track');
-    if (partnersTrack) {
-        // Clone the logos for seamless scrolling
-        const logos = partnersTrack.innerHTML;
-        partnersTrack.innerHTML += logos;
+    // Close modal when clicking outside (for all modals)
+    document.addEventListener('click', function(event) {
+        const modals = [
+            document.getElementById('projectModal'),
+            document.getElementById('doctorModal'),
+            document.getElementById('dynamicProjectModal')
+        ];
         
-        // Pause on hover
-        partnersTrack.addEventListener('mouseenter', function() {
-            this.style.animationPlayState = 'paused';
+        modals.forEach(modal => {
+            if (modal && event.target === modal) {
+                closeProjectModal();
+            }
         });
+    });
+    
+    // Handle escape key to close modal
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeProjectModal();
+        }
+    });
+}
+
+// Function to initialize page
+async function initializeProjectsPage() {
+    console.log('Initializing projects page...');
+    
+    // Get DOM elements - with fallbacks
+    projectsGrid = document.getElementById('projectsGrid');
+    categoryButtons = document.querySelectorAll('.category-btn');
+    projectsSearch = document.getElementById('projectsSearch');
+    loadMoreBtn = document.getElementById('loadMore');
+    searchButton = document.getElementById('searchButton');
+    
+    // Try to get modal elements with different possible IDs
+    projectModal = document.getElementById('projectModal') || document.getElementById('doctorModal');
+    modalBody = document.getElementById('modalBody') || document.getElementById('doctorModalBody');
+    modalCloseBtn = document.getElementById('modalClose') || document.getElementById('doctorModalClose');
+    
+    console.log('DOM elements found:', {
+        projectsGrid: !!projectsGrid,
+        categoryButtons: categoryButtons?.length || 0,
+        projectsSearch: !!projectsSearch,
+        loadMoreBtn: !!loadMoreBtn,
+        projectModal: !!projectModal,
+        modalBody: !!modalBody,
+        modalCloseBtn: !!modalCloseBtn
+    });
+    
+    try {
+        // Fetch projects data
+        console.log('Fetching projects data...');
+        const projectsData = await fetchProjects();
         
-        partnersTrack.addEventListener('mouseleave', function() {
-            this.style.animationPlayState = 'running';
-        });
+        console.log(`Loaded ${projectsData.length} projects from Strapi`);
+        allProjects = projectsData;
+        filteredProjects = [...allProjects];
+        
+        // Calculate statistics from projects
+        const projectStats = calculateProjectStats(allProjects);
+        console.log('Calculated project stats:', projectStats);
+        
+        // Render content
+        renderProjectsGrid();
+        renderStatistics(projectStats);
+        
+        // Setup event listeners
+        setupEventListeners();
+        
+        // Update load more button
+        updateLoadMoreButton();
+        
+        console.log('Projects page initialized successfully');
+        
+    } catch (error) {
+        console.error('Error initializing projects page:', error);
+        
+        // Fallback to default data
+        allProjects = getFallbackProjects();
+        filteredProjects = [...allProjects];
+        
+        // Calculate statistics from fallback projects
+        const projectStats = calculateProjectStats(allProjects);
+        
+        renderProjectsGrid();
+        renderStatistics(projectStats);
+        setupEventListeners();
+        updateLoadMoreButton();
     }
-    
-    // Set current year in footer
-    document.getElementById('currentYear').textContent = new Date().getFullYear();
-    
-    
+}
+
+// Make closeProjectModal globally available
+window.closeProjectModal = closeProjectModal;
+
+// Initialize when DOM is loaded
+if (document.querySelector('.projects-grid-section') || document.getElementById('projectsGrid')) {
+    document.addEventListener('DOMContentLoaded', initializeProjectsPage);
+}
+
+// Set current year in footer
+document.addEventListener('DOMContentLoaded', function() {
+    const currentYearEl = document.getElementById('currentYear');
+    if (currentYearEl) {
+        currentYearEl.textContent = new Date().getFullYear();
+    }
 });

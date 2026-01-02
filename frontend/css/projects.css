@@ -1209,6 +1209,331 @@
     animation: fadeInUp 0.5s ease forwards;
 }
 
+
+
+/* Strapi Integration Styles */
+.loading-projects {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+}
+
+.loading-projects .loader {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #2c4964;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.project-card[data-id] {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Modal Loading */
+.modal-loading {
+    text-align: center;
+    padding: 40px;
+}
+
+.modal-loading .loader {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #2c4964;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+/* Rich Text Content */
+.rich-text-content {
+    line-height: 1.6;
+}
+
+.rich-text-content p {
+    margin-bottom: 1rem;
+}
+
+.rich-text-content ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.rich-text-content li {
+    margin-bottom: 0.5rem;
+}
+
+/* Modal Image */
+.modal-image {
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.modal-image img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+/* Modal Sections */
+.modal-section {
+    margin-bottom: 25px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #2c4964;
+}
+
+.modal-section h3 {
+    color: #2c4964;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.modal-section ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.modal-section li {
+    padding: 8px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.modal-section li:last-child {
+    border-bottom: none;
+}
+
+/* Stats Grid in Modal */
+.stats-grid-modal {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.stat-item-modal {
+    text-align: center;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.stat-item-modal h4 {
+    color: #2c4964;
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+.stat-item-modal p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Timeline in Modal */
+.modal-timeline {
+    position: relative;
+    padding-left: 30px;
+    margin: 30px 0;
+}
+
+.modal-timeline:before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #2c4964;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.timeline-item:before {
+    content: '';
+    position: absolute;
+    left: -33px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #2c4964;
+    border: 3px solid white;
+    box-shadow: 0 0 0 2px #2c4964;
+}
+
+.timeline-date {
+    font-weight: 600;
+    color: #2c4964;
+    margin-bottom: 5px;
+}
+
+.timeline-content h4 {
+    color: #333;
+    margin-top: 0;
+}
+
+/* Modal Actions */
+.modal-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+}
+
+.modal-action-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.modal-action-btn.primary {
+    background: #2c4964;
+    color: white;
+}
+
+.modal-action-btn.primary:hover {
+    background: #1a3a5a;
+}
+
+.modal-action-btn.secondary {
+    background: #f8f9fa;
+    color: #2c4964;
+    border: 1px solid #2c4964;
+}
+
+.modal-action-btn.secondary:hover {
+    background: #e9ecef;
+}
+
+/* Empty State */
+.projects-empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.projects-empty-state i {
+    font-size: 4rem;
+    color: #ddd;
+    margin-bottom: 20px;
+}
+
+.projects-empty-state h3 {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.projects-empty-state p {
+    color: #999;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .modal-actions {
+        flex-direction: column;
+    }
+    
+    .stats-grid-modal {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-section {
+        padding: 15px;
+    }
+    
+    .modal-timeline {
+        padding-left: 20px;
+    }
+    
+    .modal-timeline:before {
+        left: 10px;
+    }
+    
+    .timeline-item:before {
+        left: -28px;
+    }
+}
+
+/* Project Status Colors */
+.project-status.ongoing {
+    color: #ff9800;
+}
+
+.project-status.completed {
+    color: #4caf50;
+}
+
+.project-status.upcoming {
+    color: #2196f3;
+}
+
+.project-status.research {
+    color: #9c27b0;
+}
+
+.project-status.infrastructure {
+    color: #795548;
+}
+
+.modal-status.ongoing {
+    background: #ff9800;
+}
+
+.modal-status.completed {
+    background: #4caf50;
+}
+
+.modal-status.upcoming {
+    background: #2196f3;
+}
+
+.modal-status.research {
+    background: #9c27b0;
+}
+
+.modal-status.infrastructure {
+    background: #795548;
+}
+
+.modal-status {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
 .project-card:nth-child(1) { animation-delay: 0.1s; }
 .project-card:nth-child(2) { animation-delay: 0.2s; }
 .project-card:nth-child(3) { animation-delay: 0.3s; }

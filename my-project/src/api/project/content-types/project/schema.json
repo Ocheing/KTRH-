@@ -1,0 +1,112 @@
+{
+  "kind": "collectionType",
+  "collectionName": "projects",
+  "info": {
+    "singularName": "project",
+    "pluralName": "projects",
+    "displayName": "Project"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title"
+    },
+    "shortDescription": {
+      "type": "string"
+    },
+    "fullDescription": {
+      "type": "blocks"
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "ongoing",
+        "completed",
+        "upcoming",
+        "research",
+        "infrastructure"
+      ]
+    },
+    "projectStatus": {
+      "type": "string"
+    },
+    "progress": {
+      "type": "integer"
+    },
+    "startDate": {
+      "type": "date"
+    },
+    "endDate": {
+      "type": "date"
+    },
+    "budget": {
+      "type": "string"
+    },
+    "contractor": {
+      "type": "string"
+    },
+    "beneficiary": {
+      "type": "text"
+    },
+    "isActive": {
+      "type": "boolean"
+    },
+    "order": {
+      "type": "integer"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "milestones": {
+      "type": "json"
+    },
+    "impact": {
+      "type": "json"
+    },
+    "features": {
+      "type": "json"
+    },
+    "team": {
+      "type": "json"
+    },
+    "contactEmail": {
+      "type": "email"
+    },
+    "fundingSource": {
+      "type": "string"
+    },
+    "projectManager": {
+      "type": "string"
+    },
+    "contactPhone": {
+      "type": "string"
+    },
+    "partners": {
+      "type": "json"
+    }
+  }
+}
