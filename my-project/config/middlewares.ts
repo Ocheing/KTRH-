@@ -68,6 +68,8 @@ export default [
         'https://www.ktrh.or.ke',
         'https://kisiiteachinghospital.or.ke',
         'https://admin.ktrh.or.ke',
+         'https://ktrh.vercel.app',      
+      'https://ktrh.vercel.app/', 
         
         // Strapi admin (if separate)
         process.env.ADMIN_URL || 'http://localhost:1337',
